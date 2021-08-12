@@ -10,10 +10,9 @@ def db_connect(func, *args) -> object:
         host="127.0.0.1",
         port="5432"
     )
-    cursor = connect.cursor()
 
     def wrapper(*arg):
-        return func(cursor, *arg)
+        return func(connect, *arg)
 
     return wrapper
 
@@ -27,12 +26,15 @@ def find_code_product(cursor, id_product):
     return cursor.fetchall()
 
 @db_connect
-def add_product_whouse():
+def add_product_warehouse(connect, warehouse_name, product, address="NULL", balance=1):
     # добавляет товар на склад
-    pass
+    cursor = connect.cursor()
+    cursor.execute("INSERT INTO warehouse(warehouse_name, product, address, balance) VALUES"
+                   " ({}, {}, '{}', {})".format(warehouse_name, product, address, balance))
+    connect.commit()
 
 @db_connect
-def remove_product_whouse():
+def remove_product_warehouse():
     # удаляет товар со склада
     pass
 
