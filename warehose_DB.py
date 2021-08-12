@@ -1,7 +1,7 @@
 import psycopg2
 
 
-def db_connect(func, *args) -> object:
+def db_connect(func) -> object:
     # декоратор для подключения к БД
     connect = psycopg2.connect(
         database="triol",
@@ -25,35 +25,41 @@ def find_code_product(cursor, id_product):
                    "code_product = '{}';".format(id_product))
     return cursor.fetchall()
 
+
 @db_connect
 def add_product_warehouse(connect, warehouse_name, product, address="NULL", balance=1):
-    # добавляет товар на склад
+    # добавляет id товара которого небыло ранее на складе
     cursor = connect.cursor()
     cursor.execute("INSERT INTO warehouse(warehouse_name, product, address, balance) VALUES"
                    " ({}, {}, '{}', {})".format(warehouse_name, product, address, balance))
     connect.commit()
 
-@db_connect
-def remove_product_warehouse():
-    # удаляет товар со склада
-    pass
 
 @db_connect
 def move_product_warehouse():
     # создает перемещение между складами
     pass
 
+
 @db_connect
 def write_off_product():
     # списание товара со склада
     pass
+
 
 @db_connect
 def shipment_product():
     # отгрузка товара клиенту со склада
     pass
 
+
 @db_connect
 def cancel_shipment():
     # возврат товара от клиента
+    pass
+
+
+@db_connect
+def get_balance_product():
+    # возвращает остаток по складам
     pass
