@@ -25,9 +25,23 @@ def find_code_product(cursor, id_product):
                    "code_product = '{}';".format(id_product))
     return cursor.fetchall()
 
+@db_connect
+def get_id_product(connect, code_product, warehouse_id):
+    # возвращает id товара из таблицы warehouse
+    cursor = connect.cursor()
+    cursor.execute("SELECT product.code_product FROM product JOIN warehouse ON product.id = warehouse.product WHERE "
+                   "warehouse.product = {} AND warehouse.warehouse_name = {};;".format(code_product, warehouse_id ))
+    return cursor.fetchall()[0][0]
+
 
 @db_connect
-def add_product_warehouse(connect, warehouse_name, product, address="NULL", balance=1):
+def reservation_product(connect):
+    # резервирование товара на складе
+    pass
+
+
+@db_connect
+def add_product_warehouse(connect, warehouse_name, product, address="", balance=1):
     # добавляет id товара которого небыло ранее на складе
     cursor = connect.cursor()
     cursor.execute("INSERT INTO warehouse(warehouse_name, product, address, balance) VALUES"
