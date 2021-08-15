@@ -69,6 +69,34 @@ def get_product_id_from_warehouse(connect, product_id):
     cursor.execute(f"""SELECT id FROM warehouse WHERE  product = {product_id}""")
     return cursor.fetchall()[0][0]
 
+@db_connect
+def move_product_warehouse(connect, product, warehouse_out, warehouse_in, count, doc_operation):
+    # создает перемещение между складами
+    cursor = connect.cursor()
+
+    cursor.execute("START TRANSACTION;")
+
+    cursor.execute(
+        f"""INSERT INTO product_move(product, warehouse_out, warehouse_in, count, doc_operation) 
+        VALUES
+        ({product}, {warehouse_out}, {warehouse_in}, {count}, {doc_operation}); """
+    )
+
+    cursor.execute(
+        f"""UPDATE warehouse SET balance = balance - {count} 
+            WHERE warehouse_name = {warehouse_out} AND product = {product}; """
+    )
+
+    cursor.execute(
+        f"""INSERT INTO reserve(id_product_warehouse, balance, doc_number, active)
+        VALUES
+        ({get_product_id_from_warehouse(product)}, {count}, {doc_operation}, true); """
+    )
+
+    cursor.execute("COMMIT;")
+
+    connect.commit()
+
 
 @db_connect
 def write_off_product():
