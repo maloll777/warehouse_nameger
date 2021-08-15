@@ -63,6 +63,14 @@ def create_operation_warehouse(connect, doc_number, doc_status, doc_type, commen
 
 
 @db_connect
+def find_id_product_for_code_product(connect, code_product):
+    # ищет id товара из таблицы product по артиклу
+    cursor = connect.cursor()
+    cursor.execute(f"""SELECT id FROM product WHERE code_product = '{code_product}'; """)
+    return cursor.fetchall()[0][0]
+
+
+@db_connect
 def get_product_id_from_warehouse(connect, product_id):
     # возвращает id продукта из таблицы warehouse по id товара из таблицы product
     cursor = connect.cursor()
@@ -79,7 +87,7 @@ def move_product_warehouse(connect, product, warehouse_out, warehouse_in, count,
     cursor.execute(
         f"""INSERT INTO product_move(product, warehouse_out, warehouse_in, count, doc_operation) 
         VALUES
-        ({product}, {warehouse_out}, {warehouse_in}, {count}, {doc_operation}); """
+        ({find_id_product_for_code_product(product)}, {warehouse_out}, {warehouse_in}, {count}, {doc_operation}); """
     )
 
     cursor.execute(
@@ -90,7 +98,8 @@ def move_product_warehouse(connect, product, warehouse_out, warehouse_in, count,
     cursor.execute(
         f"""INSERT INTO reserve(id_product_warehouse, balance, doc_number, active)
         VALUES
-        ({get_product_id_from_warehouse(product)}, {count}, {doc_operation}, true); """
+        ({get_product_id_from_warehouse(find_id_product_for_code_product(product))},
+        {count}, {doc_operation}, true); """
     )
 
     cursor.execute("COMMIT;")
