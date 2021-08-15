@@ -63,13 +63,11 @@ def create_operation_warehouse(connect, doc_number, doc_status, doc_type, commen
 
 
 @db_connect
-def move_product_warehouse(connect, product, warehouse_out, warehouse_in, count, doc_operation):
-    # создает перемещение между складами
-    pass
-
-
-
-    #connect.commit()
+def get_product_id_from_warehouse(connect, product_id):
+    # возвращает id продукта из таблицы warehouse по id товара из таблицы product
+    cursor = connect.cursor()
+    cursor.execute(f"""SELECT id FROM warehouse WHERE  product = {product_id}""")
+    return cursor.fetchall()[0][0]
 
 
 @db_connect
