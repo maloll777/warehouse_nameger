@@ -18,24 +18,25 @@ def db_connect(func) -> object:
 
 
 @db_connect
-def find_code_product(cursor, id_product):
+def find_code_product(connect, id_product):
     # по id товара информацию о нем
-
+    cursor = connect.cursor()
     cursor.execute("select code_product, product_name, subgroup_product, group_product from product where "
                    "code_product = '{}';".format(id_product))
     return cursor.fetchall()
 
+
 @db_connect
 def get_id_product(connect, code_product, warehouse_id):
-    # возвращает id товара из таблицы warehouse
+    # возвращает артикул товара по id из таблицы product
     cursor = connect.cursor()
     cursor.execute("SELECT product.code_product FROM product JOIN warehouse ON product.id = warehouse.product WHERE "
-                   "warehouse.product = {} AND warehouse.warehouse_name = {};;".format(code_product, warehouse_id ))
+                   "warehouse.product = {} AND warehouse.warehouse_name = {};;".format(code_product, warehouse_id))
     return cursor.fetchall()[0][0]
 
 
 @db_connect
-def reservation_product(connect):
+def reservation_product():
     # резервирование товара на складе
     pass
 
@@ -44,15 +45,31 @@ def reservation_product(connect):
 def add_product_warehouse(connect, warehouse_name, product, address="", balance=1):
     # добавляет id товара которого небыло ранее на складе
     cursor = connect.cursor()
-    cursor.execute("INSERT INTO warehouse(warehouse_name, product, address, balance) VALUES"
-                   " ({}, {}, '{}', {})".format(warehouse_name, product, address, balance))
+    cursor.execute("""INSERT INTO warehouse(warehouse_name, product, address, balance) VALUES"
+                   " ({}, {}, '{}', {})""".format(warehouse_name, product, address, balance))
     connect.commit()
 
 
 @db_connect
-def move_product_warehouse():
+def create_operation_warehouse(connect, doc_number, doc_status, doc_type, comment=""):
+    # создает документ для перемещения между складами
+    cursor = connect.cursor()
+    cursor.execute(
+        f"""INSERT INTO 
+        operation_warehouse(doc_number, doc_status, doc_type, comment) 
+        VALUES ('{doc_number}', '{doc_status}', {doc_type}, '{comment}'); """
+                   )
+    connect.commit()
+
+
+@db_connect
+def move_product_warehouse(connect, product, warehouse_out, warehouse_in, count, doc_operation):
     # создает перемещение между складами
     pass
+
+
+
+    #connect.commit()
 
 
 @db_connect
