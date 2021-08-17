@@ -27,18 +27,12 @@ def find_code_product(connect, id_product):
 
 
 @db_connect
-def get_id_product(connect, code_product, warehouse_id):
+def get_art_product(connect, code_product, warehouse_id):
     # возвращает артикул товара по id из таблицы product
     cursor = connect.cursor()
     cursor.execute("SELECT product.code_product FROM product JOIN warehouse ON product.id = warehouse.product WHERE "
                    "warehouse.product = {} AND warehouse.warehouse_name = {};;".format(code_product, warehouse_id))
     return cursor.fetchall()[0][0]
-
-
-@db_connect
-def reservation_product():
-    # резервирование товара на складе
-    pass
 
 
 @db_connect
@@ -102,22 +96,31 @@ def move_product_warehouse(connect, product, warehouse_out, warehouse_in, count,
         {count}, {doc_operation}, true); """
     )
 
-    #cursor.execute("COMMIT;")
 
     connect.commit()
 
 
 @db_connect
-def write_off_product():
-    # списание товара со склада
-    pass
-
-
-@db_connect
-def shipment_product():
+def get_shipment_product(connect,product, warehouse_out, count, doc_operation):
     # отгрузка товара клиенту со склада
-    pass
+    cursor = connect.cursor()
 
+    product_warehouse = find_id_product_for_code_product(product)
+    product_reserve = get_product_id_from_warehouse(product_warehouse)
+
+    cursor.execute(f"""START TRANSACTION;""")
+    cursor.execute(f"""INSERT INTO 
+            reserve(id_product_warehouse, balance, doc_number, active)
+            VALUES
+            ({product_reserve}, {count}, {doc_operation}, true)""")
+    cursor.execute(f"""UPDATE warehouse
+            SET
+            balance = balance - {count}
+            WHERE
+            product = {product_warehouse} AND warehouse_name = {warehouse_out};""")
+
+
+    connect.commit()
 
 @db_connect
 def cancel_shipment():
@@ -128,4 +131,10 @@ def cancel_shipment():
 @db_connect
 def get_balance_product():
     # возвращает остаток по складам
+    pass
+
+
+@db_connect
+def add_product_warehouse():
+    # пополнение товара на складе
     pass
