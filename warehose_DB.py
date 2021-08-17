@@ -81,13 +81,13 @@ def get_product_id_from_warehouse(connect, product_id):
 def move_product_warehouse(connect, product, warehouse_out, warehouse_in, count, doc_operation):
     # создает перемещение между складами
     cursor = connect.cursor()
-
+    product = find_id_product_for_code_product(product)
     cursor.execute("START TRANSACTION;")
 
     cursor.execute(
         f"""INSERT INTO product_move(product, warehouse_out, warehouse_in, count, doc_operation) 
         VALUES
-        ({find_id_product_for_code_product(product)}, {warehouse_out}, {warehouse_in}, {count}, {doc_operation}); """
+        ({product}, {warehouse_out}, {warehouse_in}, {count}, {doc_operation}); """
     )
 
     cursor.execute(
@@ -98,11 +98,11 @@ def move_product_warehouse(connect, product, warehouse_out, warehouse_in, count,
     cursor.execute(
         f"""INSERT INTO reserve(id_product_warehouse, balance, doc_number, active)
         VALUES
-        ({get_product_id_from_warehouse(find_id_product_for_code_product(product))},
+        ({get_product_id_from_warehouse(product)},
         {count}, {doc_operation}, true); """
     )
 
-    cursor.execute("COMMIT;")
+    #cursor.execute("COMMIT;")
 
     connect.commit()
 
