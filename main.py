@@ -1,6 +1,6 @@
 from warehouse_DB import find_code_product
 
-print(find_code_product('12111001'))
+print(find_code_product('12111030'))
 
 
 

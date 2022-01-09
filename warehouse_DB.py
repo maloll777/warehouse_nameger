@@ -27,7 +27,7 @@ def find_code_product(connect, id_product):
     cursor = connect.cursor()
     cursor.execute("select code_product, product_name, subgroup_product, group_product from product where "
                    "code_product = '{}';".format(id_product))
-    return cursor.fetchone()
+    return cursor.fetchone()[0]
 
 
 @db_connect
