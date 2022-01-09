@@ -4,16 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="85c6a95d-b68b-4189-8ad1-4b2fac15953d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/warehouse_manager.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+    <list default="true" id="85c6a95d-b68b-4189-8ad1-4b2fac15953d" name="Changes" comment="указал, что бы find_code_product снова возращал только id товара из таблицы product">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -175,7 +167,14 @@
       <option name="project" value="LOCAL" />
       <updated>1641727180208</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="указал, что бы find_code_product снова возращал только id товара из таблицы product">
+      <created>1641727901041</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1641727901041</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -216,6 +215,7 @@
     <MESSAGE value="что то пофиксил..." />
     <MESSAGE value="доблена функция отгрузк товара кленту" />
     <MESSAGE value="добавлен файл warehouse_DB_conf через который происходит выбор СУБД. Выбор СУБД происходит в db_connect" />
-    <option name="LAST_COMMIT_MESSAGE" value="добавлен файл warehouse_DB_conf через который происходит выбор СУБД. Выбор СУБД происходит в db_connect" />
+    <MESSAGE value="указал, что бы find_code_product снова возращал только id товара из таблицы product" />
+    <option name="LAST_COMMIT_MESSAGE" value="указал, что бы find_code_product снова возращал только id товара из таблицы product" />
   </component>
 </project>
