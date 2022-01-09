@@ -1,6 +1,8 @@
-import warehose_DB as wDB
+from warehouse_DB import find_code_product
 
-wDB.get_shipment_product(75437, 3, 111, 2)
+print(find_code_product('12111001'))
+
+
 
 if __name__ == '__main__':
     pass

@@ -1,29 +1,33 @@
 import psycopg2
+import sqlite3
+
+from warehouse_DB_conf import TYPE_DB
 
 
 def db_connect(func) -> object:
     # декоратор для подключения к БД
-    connect = psycopg2.connect(
-        database="triol",
-        user="postgres",
-        password="",
-        host="127.0.0.1",
-        port="5432"
-    )
+    # так же на основе файла warehouse_DB_conf.TYPE_DB происходит выбор СУБД
+    if TYPE_DB == "SQLite3":
+        with sqlite3.connect('./warehouse_sqlite.db') as connect:
+            def wrapper(*arg):
+                return func(connect, *arg)
 
-    def wrapper(*arg):
-        return func(connect, *arg)
+    elif TYPE_DB == "PostgreSQL":
+        with psycopg2.connect(database="triol", user="postgres", password="",
+                              host="127.0.0.1", port="5432") as connect:
+            def wrapper(*arg):
+                return func(connect, *arg)
 
     return wrapper
 
 
 @db_connect
 def find_code_product(connect, id_product):
-    # по id товара информацию о нем
+    # по артикулу товара информацию о нем
     cursor = connect.cursor()
     cursor.execute("select code_product, product_name, subgroup_product, group_product from product where "
                    "code_product = '{}';".format(id_product))
-    return cursor.fetchall()
+    return cursor.fetchone()
 
 
 @db_connect
@@ -52,7 +56,7 @@ def create_operation_warehouse(connect, doc_number, doc_status, doc_type, commen
         f"""INSERT INTO 
         operation_warehouse(doc_number, doc_status, doc_type, comment) 
         VALUES ('{doc_number}', '{doc_status}', {doc_type}, '{comment}'); """
-                   )
+    )
     connect.commit()
 
 
@@ -70,6 +74,7 @@ def get_product_id_from_warehouse(connect, product_id):
     cursor = connect.cursor()
     cursor.execute(f"""SELECT id FROM warehouse WHERE  product = {product_id}""")
     return cursor.fetchall()[0][0]
+
 
 @db_connect
 def move_product_warehouse(connect, product, warehouse_out, warehouse_in, count, doc_operation):
@@ -96,12 +101,11 @@ def move_product_warehouse(connect, product, warehouse_out, warehouse_in, count,
         {count}, {doc_operation}, true); """
     )
 
-
     connect.commit()
 
 
 @db_connect
-def get_shipment_product(connect,product, warehouse_out, count, doc_operation):
+def get_shipment_product(connect, product, warehouse_out, count, doc_operation):
     # отгрузка товара клиенту со склада
     cursor = connect.cursor()
 
@@ -119,8 +123,8 @@ def get_shipment_product(connect,product, warehouse_out, count, doc_operation):
             WHERE
             product = {product_warehouse} AND warehouse_name = {warehouse_out};""")
 
-
     connect.commit()
+
 
 @db_connect
 def cancel_shipment():
