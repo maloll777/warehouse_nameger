@@ -4,6 +4,30 @@ import sqlite3
 from warehouse_DB_conf import TYPE_DB
 
 
+def warehouse_loop():
+    # консольный интерфейс менеджера БД
+    while True:
+        command_dict = dict(find=find_code_product)
+        command_run = input('):> ').lower()
+        command_run = command_run.strip().split()
+
+        if command_run[0] == 'help':
+            print(*command_dict.keys())
+            continue
+        elif len(command_run) == 0 or command_run[0] not in command_dict.keys():
+            print('команда не найдена')
+            continue
+        elif len(command_run) < 2:
+            print('мало параметров')
+            continue
+        elif len(command_run) > 2:
+            print('результат поиска только по первому параметру')
+        elif command_run[0] == 'exit':
+            break
+
+        print(command_dict[command_run[0]](command_run[1]))
+
+
 def db_connect(func) -> object:
     # декоратор для подключения к БД
     # так же на основе файла warehouse_DB_conf.TYPE_DB происходит выбор СУБД
@@ -26,8 +50,9 @@ def find_code_product(connect, id_product):
     # по артикулу товара информацию о нем
     cursor = connect.cursor()
     cursor.execute("select code_product, product_name, subgroup_product, group_product from product where "
-                   "code_product = '{}';".format(id_product))
-    return cursor.fetchone()[0]
+                   "code_product LIKE '{}';".format(id_product))
+    ### return cursor.fetchone()[0]
+    return cursor.fetchone()
 
 
 @db_connect

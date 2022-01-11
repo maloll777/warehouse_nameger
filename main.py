@@ -1,9 +1,5 @@
-from warehouse_DB import find_code_product
-
-print(find_code_product('12111001'))
-
+from warehouse_DB import warehouse_loop
 
 
 if __name__ == '__main__':
-    pass
-
+    warehouse_loop()
