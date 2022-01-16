@@ -14,6 +14,8 @@ def warehouse_loop():
         if command_run[0] == 'help':
             print(*command_dict.keys())
             continue
+        elif command_run[0] == 'exit':
+            break
         elif len(command_run) == 0 or command_run[0] not in command_dict.keys():
             print('команда не найдена')
             continue
@@ -22,8 +24,7 @@ def warehouse_loop():
             continue
         elif len(command_run) > 2:
             print('результат поиска только по первому параметру')
-        elif command_run[0] == 'exit':
-            break
+
 
         print(command_dict[command_run[0]](command_run[1]))
 
