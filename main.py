@@ -1,5 +1,7 @@
-from warehouse_DB import warehouse_loop
+from warehouse_DB import Warehouse
 
+
+x = Warehouse()
 
 if __name__ == '__main__':
-    warehouse_loop()
+    x.warehouse_loop()
