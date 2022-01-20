@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="85c6a95d-b68b-4189-8ad1-4b2fac15953d" name="Changes" comment="исправлена обработка команды exit в warehouse_loop">
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+    <list default="true" id="85c6a95d-b68b-4189-8ad1-4b2fac15953d" name="Changes" comment="добавлен метод Warehouse.close. так же connect_db перерь меняет параметр self.connect ,а не возращает connect">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/warehouse_DB.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse_DB.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

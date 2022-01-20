@@ -1,5 +1,6 @@
-import psycopg2
 import sqlite3
+from prompt_toolkit import prompt
+from prompt_toolkit.completion import WordCompleter
 
 import warehouse_DB_conf
 
@@ -11,8 +12,9 @@ class Warehouse:
     def warehouse_loop(self):
         # консольный интерфейс менеджера БД
         while True:
-            command_dict = dict(find=self.find_code_product)
-            command_run = input('):> ').lower()
+            command_dict = {'find': self.find_code_product, 'help': '', 'exit': ''}
+            sql_completer = WordCompleter(command_dict.keys())
+            command_run = prompt('manager### ', completer=sql_completer).lower()
             command, *parametrs = command_run.strip().split()
 
             if command == 'help':
