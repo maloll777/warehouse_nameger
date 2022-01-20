@@ -1,6 +1,6 @@
-from warehouse_DB import Warehouse
+from warehouse_DB import WarehouseConsole
 
-x = Warehouse()
+x = WarehouseConsole()
 
 if __name__ == '__main__':
     x.connect_db()

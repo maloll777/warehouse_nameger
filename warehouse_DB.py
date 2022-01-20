@@ -9,35 +9,11 @@ class Warehouse:
 
     connect = None
 
-    def warehouse_loop(self):
-        # консольный интерфейс менеджера БД
-        while True:
-            command_dict = {'find': self.find_code_product, 'help': '', 'exit': ''}
-            sql_completer = WordCompleter(command_dict.keys())
-            command_run = prompt('manager### ', completer=sql_completer).lower()
-            command, *parametrs = command_run.strip().split()
-
-            if command == 'help':
-                print(*command_dict.keys())
-                continue
-            elif command == 'exit':
-                break
-            elif command not in command_dict.keys():
-                print('команда не найдена')
-                continue
-            elif len(parametrs) < 1:
-                print('мало параметров')
-                continue
-            elif len(parametrs) > 1:
-                print('результат поиска только по первому параметру')
-
-            print(command_dict[command](*parametrs))
-
     def connect_db(self):
         # подключения к БД
         # так же на основе файла warehouse_DB_conf.TYPE_DB происходит выбор СУБД
 
-        if warehouse_DB_conf.TYPE_DB == "SQLite3":
+        if warehouse_DB_conf.TYPE_DB.lower() == "SQLite3".lower():
             self.connect = sqlite3.connect(warehouse_DB_conf.PATH)
 
     def close_db(self):
@@ -149,3 +125,31 @@ class Warehouse:
     def delivery_product_warehouse(self):
         # пополнение товара на складе
         pass
+
+
+class WarehouseConsole(Warehouse):
+    # работа в консоли
+    def warehouse_loop(self):
+        # консольный интерфейс менеджера БД
+        while True:
+            command_dict = {'find': self.find_code_product, 'help': '', 'exit': ''}
+            sql_completer = WordCompleter(command_dict.keys())
+            command_run = prompt('manager### ', completer=sql_completer).lower()
+            command, *parametrs = command_run.strip().split()
+
+            if command == 'help':
+                print(*command_dict.keys())
+                continue
+            elif command == 'exit':
+                break
+            elif command not in command_dict.keys():
+                print('команда не найдена')
+                continue
+            elif len(parametrs) < 1:
+                print('мало параметров')
+                continue
+            elif len(parametrs) > 1:
+                print('результат поиска только по первому параметру')
+
+            print(command_dict[command](*parametrs))
+
