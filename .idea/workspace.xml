@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="85c6a95d-b68b-4189-8ad1-4b2fac15953d" name="Changes" comment="добавлен метод Warehouse.close. так же connect_db перерь меняет параметр self.connect ,а не возращает connect">
+    <list default="true" id="85c6a95d-b68b-4189-8ad1-4b2fac15953d" name="Changes" comment="при помощи prompt_toolkit автоподсказка при вводе команд">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse_DB.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse_DB.py" afterDir="false" />
     </list>
@@ -209,7 +209,14 @@
       <option name="project" value="LOCAL" />
       <updated>1642362025953</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="при помощи prompt_toolkit автоподсказка при вводе команд">
+      <created>1642708896561</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1642708896561</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -252,6 +259,7 @@
     <MESSAGE value="указал, что бы find_code_product снова возращал только id товара из таблицы product" />
     <MESSAGE value="добавлен консольный интерфейс. пока поддерживает две команды" />
     <MESSAGE value="исправлена обработка команды exit в warehouse_loop" />
-    <option name="LAST_COMMIT_MESSAGE" value="исправлена обработка команды exit в warehouse_loop" />
+    <MESSAGE value="при помощи prompt_toolkit автоподсказка при вводе команд" />
+    <option name="LAST_COMMIT_MESSAGE" value="при помощи prompt_toolkit автоподсказка при вводе команд" />
   </component>
 </project>

@@ -7,7 +7,7 @@ import warehouse_DB_conf
 
 class Warehouse:
 
-    connect = ''
+    connect = None
 
     def warehouse_loop(self):
         # консольный интерфейс менеджера БД
@@ -38,7 +38,7 @@ class Warehouse:
         # так же на основе файла warehouse_DB_conf.TYPE_DB происходит выбор СУБД
 
         if warehouse_DB_conf.TYPE_DB == "SQLite3":
-            self.connect = sqlite3.connect('./warehouse_sqlite.db')
+            self.connect = sqlite3.connect(warehouse_DB_conf.PATH)
 
     def close_db(self):
         # отключение от БД
@@ -47,46 +47,50 @@ class Warehouse:
     def find_code_product(self, id_product):
         # по артикулу товара информацию о нем
         cursor = self.connect.cursor()
-        cursor.execute("select code_product, product_name, subgroup_product, group_product from product where "
-                       "code_product LIKE '{}';".format(id_product))
+        cursor.execute(f"""SELECT code_product, product_name, subgroup_product, group_product FROM product 
+                        WHERE 
+                        code_product LIKE '{id_product}';""")
         # return cursor.fetchone(self)[0]
         return cursor.fetchone()
 
     def get_art_product(self, code_product, warehouse_id):
         # возвращает артикул товара по id из таблицы product
         cursor = self.connect.cursor()
-        cursor.execute(
-            "SELECT product.code_product FROM product JOIN warehouse ON product.id = warehouse.product WHERE "
-            "warehouse.product = {} AND warehouse.warehouse_name = {};;".format(code_product, warehouse_id))
+        cursor.execute(f"""SELECT product.code_product FROM product JOIN warehouse ON product.id = warehouse.product 
+                        WHERE 
+                        warehouse.product = {code_product} AND warehouse.warehouse_name = {warehouse_id};;""")
         return cursor.fetchall()[0][0]
 
     def add_product_warehouse(self, warehouse_name, product, address="", balance=1):
         # добавляет id товара которого небыло ранее на складе
         cursor = self.connect.cursor()
-        cursor.execute("""INSERT INTO warehouse(warehouse_name, product, address, balance) VALUES"
-                       " ({}, {}, '{}', {})""".format(warehouse_name, product, address, balance))
+        cursor.execute(f"""INSERT INTO warehouse(warehouse_name, product, address, balance) 
+                        VALUES
+                        ({warehouse_name}, {product}, '{address}', {balance})""")
         self.connect.commit()
 
     def create_operation_warehouse(self, doc_number, doc_status, doc_type, comment=""):
         # создает документ для перемещения между складами
         cursor = self.connect.cursor()
-        cursor.execute(
-            f"""INSERT INTO 
-            operation_warehouse(doc_number, doc_status, doc_type, comment) 
-            VALUES ('{doc_number}', '{doc_status}', {doc_type}, '{comment}'); """
-        )
+        cursor.execute(f"""INSERT INTO operation_warehouse(doc_number, doc_status, doc_type, comment) 
+                        VALUES
+                        ('{doc_number}', '{doc_status}', {doc_type}, '{comment}'); """)
         self.connect.commit()
 
     def find_id_product_for_code_product(self, code_product):
         # ищет id товара из таблицы product по артиклу
         cursor = self.connect.cursor()
-        cursor.execute(f"""SELECT id FROM product WHERE code_product = '{code_product}'; """)
+        cursor.execute(f"""SELECT id FROM product 
+                        WHERE
+                        code_product = '{code_product}'; """)
         return cursor.fetchall()[0][0]
 
     def get_product_id_from_warehouse(self, product_id):
         # возвращает id продукта из таблицы warehouse по id товара из таблицы product
         cursor = self.connect.cursor()
-        cursor.execute(f"""SELECT id FROM warehouse WHERE  product = {product_id}""")
+        cursor.execute(f"""SELECT id FROM warehouse 
+                        WHERE
+                        product = {product_id}""")
         return cursor.fetchall()[0][0]
 
     def move_product_warehouse(self, product, warehouse_out, warehouse_in, count, doc_operation):
@@ -109,8 +113,7 @@ class Warehouse:
         cursor.execute(
             f"""INSERT INTO reserve(id_product_warehouse, balance, doc_number, active)
             VALUES
-            ({self.get_product_id_from_warehouse(product)},
-            {count}, {doc_operation}, true); """
+            ({self.get_product_id_from_warehouse(product)}, {count}, {doc_operation}, true); """
         )
 
         self.connect.commit()
