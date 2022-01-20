@@ -1,6 +1,9 @@
 import sqlite3
+
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
+from prompt_toolkit.history import FileHistory
+from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 
 import warehouse_DB_conf
 
@@ -129,12 +132,19 @@ class Warehouse:
 
 class WarehouseConsole(Warehouse):
     # работа в консоли
+
     def warehouse_loop(self):
         # консольный интерфейс менеджера БД
+        command_dict = {'find': self.find_code_product, 'help': '', 'exit': ''}
+        sql_completer = WordCompleter(command_dict.keys())
+
         while True:
-            command_dict = {'find': self.find_code_product, 'help': '', 'exit': ''}
-            sql_completer = WordCompleter(command_dict.keys())
-            command_run = prompt('manager### ', completer=sql_completer).lower()
+
+            command_run = prompt('manager### ',
+                                 completer=sql_completer,
+                                 history=FileHistory('warehouse_history.txt'),
+                                 auto_suggest=AutoSuggestFromHistory()
+                                 ).lower()
             command, *parametrs = command_run.strip().split()
 
             if command == 'help':
