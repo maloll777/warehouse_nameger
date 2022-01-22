@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="85c6a95d-b68b-4189-8ad1-4b2fac15953d" name="Changes" comment="консоольный интерфейс перенесен в отдельный класс">
+    <list default="true" id="85c6a95d-b68b-4189-8ad1-4b2fac15953d" name="Changes" comment="добавл лог для комманд ввода">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/warehouse_DB.py" beforeDir="false" afterPath="$PROJECT_DIR$/warehouse_DB.py" afterDir="false" />
     </list>
@@ -230,7 +230,14 @@
       <option name="project" value="LOCAL" />
       <updated>1642710531769</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="добавл лог для комманд ввода">
+      <created>1642711257324</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1642711257324</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -276,6 +283,18 @@
     <MESSAGE value="при помощи prompt_toolkit автоподсказка при вводе команд" />
     <MESSAGE value="привел SQL запросы к единому стилю написания" />
     <MESSAGE value="консоольный интерфейс перенесен в отдельный класс" />
-    <option name="LAST_COMMIT_MESSAGE" value="консоольный интерфейс перенесен в отдельный класс" />
+    <MESSAGE value="добавл лог для комманд ввода" />
+    <option name="LAST_COMMIT_MESSAGE" value="добавл лог для комманд ввода" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/warehouse_DB.py</url>
+          <line>135</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
