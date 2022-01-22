@@ -138,7 +138,8 @@ class WarehouseConsole(Warehouse):
         command_dict = {'find': self.find_code_product, 'help': '', 'exit': ''}
         sql_completer = WordCompleter(list(command_dict.keys()))
 
-        while True:
+        run_loop = True
+        while run_loop:
 
             command_run = prompt('manager### ',
                                  completer=sql_completer,
@@ -151,7 +152,7 @@ class WarehouseConsole(Warehouse):
                 print(*command_dict.keys())
                 continue
             elif command == 'exit':
-                break
+                run_loop = False
             elif command not in command_dict.keys():
                 print('команда не найдена')
                 continue
@@ -161,4 +162,5 @@ class WarehouseConsole(Warehouse):
             elif len(parameters) > 1:
                 print('результат поиска только по первому параметру')
 
-            print(command_dict[command](*parameters))
+            if run_loop:
+                print(command_dict[command](*parameters))
