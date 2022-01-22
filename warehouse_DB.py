@@ -136,7 +136,7 @@ class WarehouseConsole(Warehouse):
     def warehouse_loop(self):
         # консольный интерфейс менеджера БД
         command_dict = {'find': self.find_code_product, 'help': '', 'exit': ''}
-        sql_completer = WordCompleter(command_dict.keys())
+        sql_completer = WordCompleter(list(command_dict.keys()))
 
         while True:
 
@@ -145,7 +145,7 @@ class WarehouseConsole(Warehouse):
                                  history=FileHistory('warehouse_history.txt'),
                                  auto_suggest=AutoSuggestFromHistory()
                                  ).lower()
-            command, *parametrs = command_run.strip().split()
+            command, *parameters = command_run.strip().split()
 
             if command == 'help':
                 print(*command_dict.keys())
@@ -155,11 +155,10 @@ class WarehouseConsole(Warehouse):
             elif command not in command_dict.keys():
                 print('команда не найдена')
                 continue
-            elif len(parametrs) < 1:
+            elif len(parameters) < 1:
                 print('мало параметров')
                 continue
-            elif len(parametrs) > 1:
+            elif len(parameters) > 1:
                 print('результат поиска только по первому параметру')
 
-            print(command_dict[command](*parametrs))
-
+            print(command_dict[command](*parameters))
