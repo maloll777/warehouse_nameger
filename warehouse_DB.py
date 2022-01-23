@@ -34,14 +34,15 @@ class Warehouse:
 
     def get_art_product(self, code_product, warehouse_id):
         # возвращает артикул товара по id из таблицы product
-        self.cursor.execute(f"""SELECT product.code_product FROM product JOIN warehouse ON product.id = warehouse.product 
+        self.cursor.execute(
+                        f"""SELECT product.code_product FROM product JOIN warehouse ON product.id = warehouse.product 
                         WHERE 
                         warehouse.product = {code_product} AND warehouse.warehouse_name = {warehouse_id};;""")
         return self.cursor.fetchall()[0][0]
 
     def add_product_warehouse(self, warehouse_name, product, address="", balance=1):
         # добавляет id товара которого небыло ранее на складе
-        cursor.execute(f"""INSERT INTO warehouse(warehouse_name, product, address, balance) 
+        self.cursor.execute(f"""INSERT INTO warehouse(warehouse_name, product, address, balance) 
                         VALUES
                         ({warehouse_name}, {product}, '{address}', {balance})""")
         self.connect.commit()
