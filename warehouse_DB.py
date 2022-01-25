@@ -71,7 +71,7 @@ class Warehouse:
     def move_product_warehouse(self, product, warehouse_out, warehouse_in, count, doc_operation):
         # создает перемещение между складами
         product = self.find_id_product_for_code_product(product)
-        self._cursor.execute("START TRANSACTION;")
+        self._cursor.execute("BEGIN TRANSACTION;")
 
         self._cursor.execute(
             f"""INSERT INTO product_move(product, warehouse_out, warehouse_in, count, doc_operation) 
@@ -87,8 +87,10 @@ class Warehouse:
         self._cursor.execute(
             f"""INSERT INTO reserve(id_product_warehouse, balance, doc_number, active)
             VALUES
-            ({self.get_product_id_from_warehouse(product)}, {count}, {doc_operation}, true); """
+            ({product}, {count}, {doc_operation}, true); """
         )
+
+        self._cursor.execute("COMMIT;")
 
         self._connect.commit()
 
@@ -108,6 +110,8 @@ class Warehouse:
                 balance = balance - {count}
                 WHERE
                 product = {product_warehouse} AND warehouse_name = {warehouse_out};""")
+
+        self._cursor.execute("COMMIT:")
 
         self._connect.commit()
 
@@ -140,7 +144,9 @@ class WarehouseConsole(Warehouse):
     def warehouse_loop(self):
         # консольный интерфейс менеджера БД
         self._connect_db()
-        command_dict = {'find': self.find_code_product, 'help': '', 'exit': '', 'balance': self.get_balance_product}
+        command_dict = {'help': '', 'exit': '',
+                        'find': self.find_code_product, 'balance': self.get_balance_product
+                        }
         sql_completer = WordCompleter(list(command_dict.keys()))
 
         run_loop = True
