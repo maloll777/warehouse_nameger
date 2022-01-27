@@ -130,8 +130,12 @@ class Warehouse:
             Product p ON w.product = p.id
             WHERE wl.warehouse_name LIKE '{warehouse_name}' AND p.code_product LIKE '{product}';"""
         )
-
-        return self._cursor.fetchall()
+        out = self._cursor.fetchone()
+        if out is None:
+            out = 0
+        else:
+            out = out[2]
+        return out
 
     def delivery_product_warehouse(self):
         # пополнение товара на складе
@@ -148,7 +152,6 @@ class WarehouseConsole(Warehouse):
                         'find': self.find_code_product, 'balance': self.get_balance_product
                         }
         sql_completer = WordCompleter(list(command_dict.keys()))
-
         run_loop = True
         while run_loop:
 
