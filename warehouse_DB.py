@@ -100,6 +100,13 @@ class Warehouse:
         product_warehouse = self.find_id_product_for_code_product(product)
         product_reserve = self.get_product_id_from_warehouse(product_warehouse)
 
+        balance = self.get_balance_product(warehouse_out, product)
+
+        if count > balance:
+            count = balance
+        elif balance == 0:
+            return 'нет позиции на складе'
+
         self._cursor.execute(f"""START TRANSACTION;""")
         self._cursor.execute(f"""INSERT INTO 
                 reserve(id_product_warehouse, balance, doc_number, active)
