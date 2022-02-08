@@ -31,6 +31,13 @@ class Warehouse:
                         code_product LIKE '{id_product}';""")
         return self._cursor.fetchone()
 
+    def find_id_product_for_code_product(self, code_product):
+        # ищет id товара из таблицы product по артиклу
+        self._cursor.execute(f"""SELECT id FROM product 
+                        WHERE
+                        code_product = '{code_product}'; """)
+        return self._cursor.fetchall()[0][0]
+
     def get_art_warehouse(self, warehouse_name):
         # по имени склада возращает его ID из списка складов
         self._cursor.execute(f"""SELECT id FROM Warehouse_list
@@ -49,26 +56,22 @@ class Warehouse:
                         warehouse.product = {code_product} AND warehouse.warehouse_name = {warehouse_id};;""")
         return self._cursor.fetchall()[0][0]
 
-    def add_product_warehouse(self, warehouse_name, product, address="", balance=1):
-        # добавляет id товара которого небыло ранее на складе
-        self._cursor.execute(f"""INSERT INTO warehouse(warehouse_name, product, address, balance) 
-                        VALUES
-                        ({warehouse_name}, {product}, '{address}', {balance})""")
-        self._connect.commit()
-
-    def create_operation_warehouse(self, doc_number, doc_status, doc_type, comment=""):
-        # создает документ для перемещения между складами
-        self._cursor.execute(f"""INSERT INTO operation_warehouse(doc_number, doc_status, doc_type, comment) 
-                        VALUES
-                        ('{doc_number}', '{doc_status}', {doc_type}, '{comment}'); """)
-        self._connect.commit()
-
-    def find_id_product_for_code_product(self, code_product):
-        # ищет id товара из таблицы product по артиклу
-        self._cursor.execute(f"""SELECT id FROM product 
-                        WHERE
-                        code_product = '{code_product}'; """)
-        return self._cursor.fetchall()[0][0]
+    def get_balance_product(self, warehouse_name='%', product='%'):
+        # возвращает остаток по складам
+        self._cursor.execute(
+            f"""SELECT p.code_product, p.product_name, w.balance, wl.warehouse_name 
+            FROM warehouse w 
+            JOIN
+            Warehouse_list wl ON w.warehouse_name = wl.id
+            JOIN
+            Product p ON w.product = p.id
+            WHERE wl.warehouse_name LIKE '{warehouse_name}' AND p.code_product LIKE '{product}';"""
+        )
+        out = self._cursor.fetchone()
+        if out is None:
+            return out
+        else:
+            return out[2]
 
     def get_product_id_from_warehouse(self, product_id):
         # возвращает id продукта из таблицы warehouse по id товара из таблицы product
@@ -76,6 +79,13 @@ class Warehouse:
                         WHERE
                         product = {product_id}""")
         return self._cursor.fetchall()[0][0]
+
+    def create_operation_warehouse(self, doc_number, doc_status, doc_type, comment=""):
+        # создает документ для перемещения между складами
+        self._cursor.execute(f"""INSERT INTO operation_warehouse(doc_number, doc_status, doc_type, comment) 
+                        VALUES
+                        ('{doc_number}', '{doc_status}', {doc_type}, '{comment}'); """)
+        self._connect.commit()
 
     def move_product_warehouse(self, product, warehouse_out, warehouse_in, count, doc_operation):
         # создает перемещение между складами
@@ -103,55 +113,6 @@ class Warehouse:
 
         self._connect.commit()
 
-    def get_shipment_product(self, product, warehouse_out, count, doc_operation):
-        # отгрузка товара клиенту со склада
-
-        product_warehouse = self.find_id_product_for_code_product(product)
-        product_reserve = self.get_product_id_from_warehouse(product_warehouse)
-
-        balance = self.get_balance_product(warehouse_out, product)
-
-        if count > balance:
-            count = balance
-        elif balance == 0:
-            return 'нет позиции на складе'
-
-        self._cursor.execute(f"""START TRANSACTION;""")
-        self._cursor.execute(f"""INSERT INTO 
-                reserve(id_product_warehouse, balance, doc_number, active)
-                VALUES
-                ({product_reserve}, {count}, {doc_operation}, true)""")
-        self._cursor.execute(f"""UPDATE warehouse
-                SET
-                balance = balance - {count}
-                WHERE
-                product = {product_warehouse} AND warehouse_name = {warehouse_out};""")
-
-        self._cursor.execute("COMMIT:")
-
-        self._connect.commit()
-
-    def cancel_shipment(self):
-        # возврат товара от клиента
-        pass
-
-    def get_balance_product(self, warehouse_name='%', product='%'):
-        # возвращает остаток по складам
-        self._cursor.execute(
-            f"""SELECT p.code_product, p.product_name, w.balance, wl.warehouse_name 
-            FROM warehouse w 
-            JOIN
-            Warehouse_list wl ON w.warehouse_name = wl.id
-            JOIN
-            Product p ON w.product = p.id
-            WHERE wl.warehouse_name LIKE '{warehouse_name}' AND p.code_product LIKE '{product}';"""
-        )
-        out = self._cursor.fetchone()
-        if out is None:
-            return out
-        else:
-            return out[2]
-
     def delivery_product_warehouse(self, warehouse_name, product, add_count, address=''):
         # пополнение товара на складе
 
@@ -174,6 +135,15 @@ class Warehouse:
                             WHERE warehouse_name = {warehouse_name} and product = {product};"""
             )
             self._connect.commit()
+
+    def cancel_shipment(self):
+        # возврат товара от клиента
+        pass
+
+    def get_shipment_product(self, product, warehouse_out, count, doc_operation):
+        # отгрузка товара клиенту со склада
+
+        pass
 
 
 class WarehouseConsole(Warehouse):
