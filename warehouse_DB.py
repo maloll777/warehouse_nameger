@@ -12,7 +12,7 @@ class Warehouse:
     _connect = None
     _cursor = None
 
-    def _connect_db(self):
+    def __init__(self):
         # подключения к БД
         # так же на основе файла warehouse_DB_conf.TYPE_DB происходит выбор СУБД
 
@@ -151,7 +151,6 @@ class WarehouseConsole(Warehouse):
 
     def warehouse_loop(self):
         # консольный интерфейс менеджера БД
-        self._connect_db()
         command_dict = {'help': '', 'exit': '',
                         'find': self.find_code_product, 'balance': self.get_balance_product,
                         'delivery': self.delivery_product_warehouse
