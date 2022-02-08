@@ -9,7 +9,6 @@ import warehouse_DB_conf
 
 
 class Warehouse:
-
     _connect = None
     _cursor = None
 
@@ -32,10 +31,20 @@ class Warehouse:
                         code_product LIKE '{id_product}';""")
         return self._cursor.fetchone()
 
+    def get_art_warehouse(self, warehouse_name):
+        # по имени склада возращает его ID из списка складов
+        self._cursor.execute(f"""SELECT id FROM Warehouse_list
+            WHERE warehouse_name = ('{warehouse_name.upper()}')""")
+        out = self._cursor.fetchone()
+
+        if out is None:
+            return -1
+        return out[0]
+
     def get_art_product(self, code_product, warehouse_id):
         # возвращает артикул товара по id из таблицы product
         self._cursor.execute(
-                        f"""SELECT product.code_product FROM product JOIN warehouse ON product.id = warehouse.product 
+            f"""SELECT product.code_product FROM product JOIN warehouse ON product.id = warehouse.product 
                         WHERE 
                         warehouse.product = {code_product} AND warehouse.warehouse_name = {warehouse_id};;""")
         return self._cursor.fetchall()[0][0]
@@ -139,14 +148,32 @@ class Warehouse:
         )
         out = self._cursor.fetchone()
         if out is None:
-            out = 0
+            return out
         else:
-            out = out[2]
-        return out
+            return out[2]
 
-    def delivery_product_warehouse(self):
+    def delivery_product_warehouse(self, warehouse_name, product, add_count, address=''):
         # пополнение товара на складе
-        pass
+
+        add_count = int(add_count)
+        current_balance = self.get_balance_product(warehouse_name, product)
+        product = self.find_id_product_for_code_product(product)
+        warehouse_name = self.get_art_warehouse(warehouse_name)
+        if current_balance is None:
+            self._cursor.execute(
+                f"""INSERT INTO warehouse (warehouse_name, product, balance, address )
+                            VALUES
+                            ({warehouse_name},{product},{add_count},'{address}');"""
+            )
+            self._connect.commit()
+        else:
+            add_count += current_balance
+            self._cursor.execute(
+                f"""UPDATE warehouse 
+                            SET balance = {add_count} 
+                            WHERE warehouse_name = {warehouse_name} and product = {product};"""
+            )
+            self._connect.commit()
 
 
 class WarehouseConsole(Warehouse):
@@ -156,9 +183,11 @@ class WarehouseConsole(Warehouse):
         # консольный интерфейс менеджера БД
         self._connect_db()
         command_dict = {'help': '', 'exit': '',
-                        'find': self.find_code_product, 'balance': self.get_balance_product
+                        'find': self.find_code_product, 'balance': self.get_balance_product,
+                        'delivery': self.delivery_product_warehouse
                         }
         sql_completer = WordCompleter(list(command_dict.keys()))
+
         run_loop = True
         while run_loop:
 
@@ -181,7 +210,7 @@ class WarehouseConsole(Warehouse):
             elif len(parameters) < 1:
                 print('мало параметров')
                 continue
-            elif len(parameters) > 1:
+            elif len(parameters) > 1 and command == 'find':
                 print('результат поиска только по первому параметру')
 
             if run_loop:
