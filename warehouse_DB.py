@@ -9,9 +9,6 @@ import warehouse_DB_conf
 
 
 class Warehouse:
-    _connect = None
-    _cursor = None
-
     def __init__(self):
         # подключения к БД
         # так же на основе файла warehouse_DB_conf.TYPE_DB происходит выбор СУБД
