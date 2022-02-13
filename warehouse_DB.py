@@ -9,7 +9,7 @@ import warehouse_DB_conf
 from orm_warehouse import *
 
 
-class Warehouse:
+class WarehouseClass:
     def __init__(self):
         # подключения к БД
         # так же на основе файла warehouse_DB_conf.TYPE_DB происходит выбор СУБД
@@ -150,7 +150,7 @@ class Warehouse:
         pass
 
 
-class WarehouseConsole(Warehouse):
+class WarehouseConsole(WarehouseClass):
     # работа в консоли
 
     def warehouse_loop(self):
