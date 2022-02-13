@@ -6,6 +6,7 @@ from prompt_toolkit.history import FileHistory
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 
 import warehouse_DB_conf
+from orm_warehouse import *
 
 
 class Warehouse:
@@ -23,10 +24,17 @@ class Warehouse:
 
     def find_code_product(self, id_product):
         # по артикулу товара информацию о нем
-        self._cursor.execute(f"""SELECT code_product, product_name, subgroup_product, group_product FROM product 
-                        WHERE 
-                        code_product LIKE '{id_product}';""")
-        return self._cursor.fetchone()
+        # возвращает словарь со значениями либо None
+
+        try :
+            data = Product.get(Product.code_product==id_product)
+        except :
+            data = None
+        if data is not None:
+            data = {'code_product':data.code_product, 'product_name':data.product_name, 'ean_code':data.ean_code,
+                'price':data.price, 'brand_name':data.brand_product, 'group':data.group_product,
+               'subgroup':data.subgroup_product}
+        return data
 
     def find_id_product_for_code_product(self, code_product):
         # ищет id товара из таблицы product по артиклу
@@ -133,13 +141,12 @@ class Warehouse:
             )
             self._connect.commit()
 
-    def cancel_shipment(self):
-        # возврат товара от клиента
-        pass
-
     def get_shipment_product(self, product, warehouse_out, count, doc_operation):
         # отгрузка товара клиенту со склада
+        pass
 
+    def cancel_shipment(self):
+        # возврат товара от клиента
         pass
 
 
@@ -148,6 +155,11 @@ class WarehouseConsole(Warehouse):
 
     def warehouse_loop(self):
         # консольный интерфейс менеджера БД
+
+        def find(prod):
+            x = self.find_code_product(prod)
+            print(dir(x))
+
         command_dict = {'help': '', 'exit': '',
                         'find': self.find_code_product, 'balance': self.get_balance_product,
                         'delivery': self.delivery_product_warehouse
