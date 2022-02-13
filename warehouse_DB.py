@@ -156,10 +156,6 @@ class WarehouseConsole(Warehouse):
     def warehouse_loop(self):
         # консольный интерфейс менеджера БД
 
-        def find(prod):
-            x = self.find_code_product(prod)
-            print(dir(x))
-
         command_dict = {'help': '', 'exit': '',
                         'find': self.find_code_product, 'balance': self.get_balance_product,
                         'delivery': self.delivery_product_warehouse
