@@ -53,16 +53,13 @@ class WarehouseClass:
             return -1
         return out[0]
 
-    def get_art_product(self, code_product, warehouse_id):
+    def get_art_product(self, code_product):  #, warehouse_id):
         # возвращает артикул товара по id из таблицы product
-        self._cursor.execute(
-            f"""SELECT product.code_product FROM product JOIN warehouse ON product.id = warehouse.product 
-                        WHERE 
-                        warehouse.product = {code_product} AND warehouse.warehouse_name = {warehouse_id};;""")
-        return self._cursor.fetchall()[0][0]
+        return Product.get(code_product).code_product
 
     def get_balance_product(self, warehouse_name='%', product='%'):
         # возвращает остаток по складам
+
         self._cursor.execute(
             f"""SELECT p.code_product, p.product_name, w.balance, wl.warehouse_name 
             FROM warehouse w 
