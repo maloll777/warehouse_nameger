@@ -36,12 +36,9 @@ class WarehouseClass:
                'subgroup':data.subgroup_product}
         return data
 
-    def find_id_product_for_code_product(self, code_product):
+    def find_id_product_for_code_product(self, find_code):
         # ищет id товара из таблицы product по артиклу
-        self._cursor.execute(f"""SELECT id FROM product 
-                        WHERE
-                        code_product = '{code_product}'; """)
-        return self._cursor.fetchall()[0][0]
+        return Product.select().where(Product.code_product == find_code).get()
 
     def get_art_warehouse(self, warehouse_name):
         # по имени склада возращает его ID из списка складов
@@ -53,7 +50,7 @@ class WarehouseClass:
             return -1
         return out[0]
 
-    def get_art_product(self, code_product):  #, warehouse_id):
+    def get_art_product(self, code_product):
         # возвращает артикул товара по id из таблицы product
         return Product.get(code_product).code_product
 
