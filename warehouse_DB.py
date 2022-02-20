@@ -22,7 +22,7 @@ class WarehouseClass:
         # отключение от БД
         self._connect.close()
 
-    def find_code_product(self, id_product):
+    def get_info_product(self, id_product):
         # по артикулу товара информацию о нем
         # возвращает словарь со значениями либо None
 
@@ -142,7 +142,7 @@ class WarehouseConsole(WarehouseClass):
         # консольный интерфейс менеджера БД
 
         command_dict = {'help': '', 'exit': '',
-                        'find': self.find_code_product, 'balance': self.get_balance_product,
+                        'find': self.get_info_product, 'balance': self.get_balance_product,
                         'delivery': self.delivery_product_warehouse
                         }
         sql_completer = WordCompleter(list(command_dict.keys()))
