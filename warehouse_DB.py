@@ -40,7 +40,7 @@ class WarehouseClass:
         # ищет id товара из таблицы product по артиклу
         return Product.get(Product.code_product == find_code)
 
-    def get_art_warehouse(self, warehouse_name):
+    def get_id_warehouse(self, warehouse_name):
         # по имени склада возращает его ID из списка складов
         self._cursor.execute(f"""SELECT id FROM Warehouse_list
             WHERE warehouse_name = ('{warehouse_name.upper()}')""")
@@ -58,7 +58,7 @@ class WarehouseClass:
         # возвращает остаток по складам
 
         id_product = self.get_id_product(product)
-        id_warehouse = self.get_art_warehouse(warehouse_name)
+        id_warehouse = self.get_id_warehouse(warehouse_name)
 
         return Warehouse.get((Warehouse.warehouse_id == id_warehouse) & (Warehouse.product_id == id_product)).balance
 
@@ -109,7 +109,7 @@ class WarehouseClass:
         add_count = int(add_count)
         current_balance = self.get_balance_product(warehouse_name, product)
         product = self.get_id_product(product)
-        warehouse_name = self.get_art_warehouse(warehouse_name)
+        warehouse_name = self.get_id_warehouse(warehouse_name)
         if current_balance is None:
             self._cursor.execute(
                 f"""INSERT INTO warehouse (warehouse_name, product, balance, address )
