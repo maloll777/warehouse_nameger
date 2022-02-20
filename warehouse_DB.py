@@ -36,9 +36,9 @@ class WarehouseClass:
                'subgroup':data.subgroup_product}
         return data
 
-    def find_id_product_for_code_product(self, find_code):
+    def get_id_product(self, find_code):
         # ищет id товара из таблицы product по артиклу
-        return Product.select().where(Product.code_product == find_code).get()
+        return Product.get(code_product).code_product
 
     def get_art_warehouse(self, warehouse_name):
         # по имени склада возращает его ID из списка складов
@@ -88,7 +88,7 @@ class WarehouseClass:
 
     def move_product_warehouse(self, product, warehouse_out, warehouse_in, count, doc_operation):
         # создает перемещение между складами
-        product = self.find_id_product_for_code_product(product)
+        product = self.get_id_product(product)
         self._cursor.execute("BEGIN TRANSACTION;")
 
         self._cursor.execute(
@@ -117,7 +117,7 @@ class WarehouseClass:
 
         add_count = int(add_count)
         current_balance = self.get_balance_product(warehouse_name, product)
-        product = self.find_id_product_for_code_product(product)
+        product = self.get_id_product(product)
         warehouse_name = self.get_art_warehouse(warehouse_name)
         if current_balance is None:
             self._cursor.execute(
