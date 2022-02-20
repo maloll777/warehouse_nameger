@@ -38,7 +38,7 @@ class WarehouseClass:
 
     def get_id_product(self, find_code):
         # ищет id товара из таблицы product по артиклу
-        return Product.get(code_product).code_product
+        return Product.get(Product.code_product == find_code)
 
     def get_art_warehouse(self, warehouse_name):
         # по имени склада возращает его ID из списка складов
@@ -54,23 +54,14 @@ class WarehouseClass:
         # возвращает артикул товара по id из таблицы product
         return Product.get(id_product).code_product
 
-    def get_balance_product(self, warehouse_name='%', product='%'):
+    def get_balance_product(self, warehouse_name, product):
         # возвращает остаток по складам
 
-        self._cursor.execute(
-            f"""SELECT p.code_product, p.product_name, w.balance, wl.warehouse_name 
-            FROM warehouse w 
-            JOIN
-            Warehouse_list wl ON w.warehouse_name = wl.id
-            JOIN
-            Product p ON w.product = p.id
-            WHERE wl.warehouse_name LIKE '{warehouse_name}' AND p.code_product LIKE '{product}';"""
-        )
-        out = self._cursor.fetchone()
-        if out is None:
-            return out
-        else:
-            return out[2]
+        id_product = self.get_id_product(product)
+        id_warehouse = self.get_art_warehouse(warehouse_name)
+
+        return Warehouse.get((Warehouse.warehouse_id == id_warehouse) & (Warehouse.product_id == id_product)).balance
+
 
     def get_product_id_from_warehouse(self, product_id):
         # возвращает id продукта из таблицы warehouse по id товара из таблицы product
