@@ -26,14 +26,15 @@ class WarehouseClass:
         # по артикулу товара информацию о нем
         # возвращает словарь со значениями либо None
 
-        try :
-            data = Product.get(Product.code_product==id_product)
-        except :
+        try:
+            data = Product.get(Product.code_product == id_product)
+        except:
             data = None
+
         if data is not None:
-            data = {'code_product':data.code_product, 'product_name':data.product_name, 'ean_code':data.ean_code,
-                'price':data.price, 'brand_name':data.brand_product, 'group':data.group_product,
-               'subgroup':data.subgroup_product}
+            data = {'code_product': data.code_product, 'product_name': data.product_name, 'ean_code': data.ean_code,
+                    'price': data.price, 'brand_name': data.brand_product, 'group': data.group_product,
+                    'subgroup': data.subgroup_product}
         return data
 
     def get_id_product(self, find_code):
@@ -43,9 +44,9 @@ class WarehouseClass:
     def get_id_warehouse(self, warehouse_name):
         # по имени склада возращает его ID из списка складов
 
-        try :
+        try:
             data = Warehouse_list.get(Warehouse_list.warehouse_name == warehouse_name.upper())
-        except :
+        except:
             data = None
 
         return data
@@ -61,7 +62,6 @@ class WarehouseClass:
         id_warehouse = self.get_id_warehouse(warehouse_name)
 
         return Warehouse.get((Warehouse.warehouse_id == id_warehouse) & (Warehouse.product_id == id_product)).balance
-
 
     def get_product_id_from_warehouse(self, product_id):
         # возвращает id продукта из таблицы warehouse по id товара из таблицы product
