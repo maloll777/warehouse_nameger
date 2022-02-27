@@ -51,10 +51,6 @@ class WarehouseClass:
 
         return data
 
-    def get_art_product(self, id_product):
-        # возвращает артикул товара по id из таблицы product
-        return Product.get(id_product).code_product
-
     def get_balance_product(self, warehouse_name, product):
         # возвращает остаток по складам
 
