@@ -59,13 +59,6 @@ class WarehouseClass:
 
         return Warehouse.get((Warehouse.warehouse_id == id_warehouse) & (Warehouse.product_id == id_product)).balance
 
-    def get_product_id_from_warehouse(self, product_id):
-        # возвращает id продукта из таблицы warehouse по id товара из таблицы product
-        self._cursor.execute(f"""SELECT id FROM warehouse 
-                        WHERE
-                        product = {product_id}""")
-        return self._cursor.fetchall()[0][0]
-
     def create_operation_warehouse(self, doc_number, doc_status, doc_type, comment=""):
         # создает документ для перемещения между складами
         self._cursor.execute(f"""INSERT INTO operation_warehouse(doc_number, doc_status, doc_type, comment) 
