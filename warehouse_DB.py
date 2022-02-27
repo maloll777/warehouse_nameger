@@ -42,13 +42,13 @@ class WarehouseClass:
 
     def get_id_warehouse(self, warehouse_name):
         # по имени склада возращает его ID из списка складов
-        self._cursor.execute(f"""SELECT id FROM Warehouse_list
-            WHERE warehouse_name = ('{warehouse_name.upper()}')""")
-        out = self._cursor.fetchone()
 
-        if out is None:
-            return -1
-        return out[0]
+        try :
+            data = Warehouse_list.get(Warehouse_list.warehouse_name == warehouse_name.upper())
+        except :
+            data = None
+
+        return data
 
     def get_art_product(self, id_product):
         # возвращает артикул товара по id из таблицы product
