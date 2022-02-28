@@ -28,7 +28,7 @@ class WarehouseClass:
 
         try:
             data = Product.get(Product.code_product == id_product)
-        except:
+        except DoesNotExist:
             data = None
 
         if data is not None:
@@ -46,7 +46,7 @@ class WarehouseClass:
 
         try:
             data = Warehouse_list.get(Warehouse_list.warehouse_name == warehouse_name.upper())
-        except:
+        except DoesNotExist:
             data = None
 
         return data
@@ -58,7 +58,8 @@ class WarehouseClass:
         id_warehouse = self.get_id_warehouse(warehouse_name)
 
         try:
-            data = Warehouse.get((Warehouse.warehouse_id == id_warehouse) & (Warehouse.product_id == id_product)).balance
+            data = Warehouse.get((Warehouse.warehouse_id == id_warehouse)
+                                 & (Warehouse.product_id == id_product)).balance
         except DoesNotExist:
             data = None
         return data
