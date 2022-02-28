@@ -57,7 +57,11 @@ class WarehouseClass:
         id_product = self.get_id_product(product)
         id_warehouse = self.get_id_warehouse(warehouse_name)
 
-        return Warehouse.get((Warehouse.warehouse_id == id_warehouse) & (Warehouse.product_id == id_product)).balance
+        try:
+            data = Warehouse.get((Warehouse.warehouse_id == id_warehouse) & (Warehouse.product_id == id_product)).balance
+        except DoesNotExist:
+            data = None
+        return data
 
     def create_operation_warehouse(self, doc_number, doc_status, doc_type, comment=""):
         # создает документ для перемещения между складами

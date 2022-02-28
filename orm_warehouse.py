@@ -1,4 +1,4 @@
-from peewee import SqliteDatabase, Model
+from peewee import SqliteDatabase, Model, DoesNotExist
 from peewee import CharField, ForeignKeyField, IntegerField, FloatField, BooleanField
 
 db = SqliteDatabase('./warehouse_sqlite_id.db')
