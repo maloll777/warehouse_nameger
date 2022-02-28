@@ -96,7 +96,7 @@ class WarehouseClass:
 
         self._connect.commit()
 
-    def delivery_product_warehouse(self, warehouse_name, product, add_count, address=''):
+    def delivery_product_warehouse(self, warehouse_name, product, add_count, address_product=''):
         # пополнение товара на складе
 
         add_count = int(add_count)
@@ -104,20 +104,13 @@ class WarehouseClass:
         product = self.get_id_product(product)
         warehouse_name = self.get_id_warehouse(warehouse_name)
         if current_balance is None:
-            self._cursor.execute(
-                f"""INSERT INTO warehouse (warehouse_name, product, balance, address )
-                            VALUES
-                            ({warehouse_name},{product},{add_count},'{address}');"""
-            )
-            self._connect.commit()
+            Warehouse.create(product_id=product, warehouse_id=warehouse_name,
+                             balance=add_count, address=address_product).save()
         else:
             add_count += current_balance
-            self._cursor.execute(
-                f"""UPDATE warehouse 
-                            SET balance = {add_count} 
-                            WHERE warehouse_name = {warehouse_name} and product = {product};"""
-            )
-            self._connect.commit()
+            raw = Warehouse.get(Warehouse.warehouse_id == warehouse_name and Warehouse.product_id == product)
+            raw.balance = add_count
+            raw.save()
 
     def get_shipment_product(self, product, warehouse_out, count, doc_operation):
         # отгрузка товара клиенту со склада
