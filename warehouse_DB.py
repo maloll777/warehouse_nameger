@@ -70,26 +70,7 @@ class WarehouseClass:
 
     def create_operation_warehouse(self, doc_number, doc_status, doc_type, comment=""):
         # создает документ для перемещения между складами
-        self._cursor.execute(f"""INSERT INTO operation_warehouse(doc_number, doc_status, doc_type, comment) 
-                        VALUES
-                        ('{doc_number}', '{doc_status}', {doc_type}, '{comment}'); """)
-        self._connect.commit()
-
-    def move_product_warehouse(self, product, warehouse_out, warehouse_in, count, doc_operation):
-        # создает перемещение между складами
-        product = self.get_id_product(product)
-        self._cursor.execute("BEGIN TRANSACTION;")
-
-        self._cursor.execute(
-            f"""INSERT INTO product_move(product, warehouse_out, warehouse_in, count, doc_operation) 
-            VALUES
-            ({product}, {warehouse_out}, {warehouse_in}, {count}, {doc_operation}); """
-        )
-
-        self._cursor.execute(
-            f"""UPDATE warehouse SET balance = balance - {count} 
-                WHERE warehouse_name = {warehouse_out} AND product = {product}; """
-        )
+        pass
 
     def add_product_reserve(self, product, warehouse_out, warehouse_in, count, doc_operation):
         # резервирует товар для перемещения
