@@ -49,14 +49,8 @@ class Operation_doc_warehouse(Table):
     doc_type_id = ForeignKeyField(DocumentType)
     comment_operation = CharField()
     doc_number = CharField()
-
-
-class Product_move(Table):
-    product_id = ForeignKeyField(Product)
-    doc_operation_id = ForeignKeyField(Operation_doc_warehouse)
     warehouse_out_id = ForeignKeyField(Warehouse_list)
     warehouse_in_id = ForeignKeyField(Warehouse_list)
-    count = IntegerField()
 
 
 class Reserve(Table):
