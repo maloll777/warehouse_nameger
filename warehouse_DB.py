@@ -87,15 +87,13 @@ class WarehouseClass:
                 WHERE warehouse_name = {warehouse_out} AND product = {product}; """
         )
 
-        self._cursor.execute(
-            f"""INSERT INTO reserve(id_product_warehouse, balance, doc_number, active)
-            VALUES
-            ({product}, {count}, {doc_operation}, true); """
-        )
+    def add_product_reserve(self, product, warehouse_out, warehouse_in, count, doc_operation):
+        # резервирует товар для перемещения
+        pass
 
-        self._cursor.execute("COMMIT;")
-
-        self._connect.commit()
+    def ship_product_reserve(self):
+        # отгрузка накладной с товаром из резерва
+        pass
 
     def delivery_product_warehouse(self, warehouse_name, product, add_count, address_product=''):
         # пополнение товара на складе
