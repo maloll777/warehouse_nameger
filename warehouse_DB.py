@@ -115,10 +115,6 @@ class WarehouseClass:
             raw.balance = add_count
             raw.save()
 
-    def get_shipment_product(self, product, warehouse_out, count, doc_operation):
-        # отгрузка товара клиенту со склада
-        pass
-
     def cancel_shipment(self):
         # возврат товара от клиента
         pass
