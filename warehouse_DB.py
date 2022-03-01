@@ -5,6 +5,8 @@ from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.history import FileHistory
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 
+from peewee import DoesNotExist
+
 import warehouse_DB_conf
 from orm_warehouse import *
 
