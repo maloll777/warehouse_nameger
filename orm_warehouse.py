@@ -60,10 +60,10 @@ class Product_move(Table):
 
 
 class Reserve(Table):
-    product_warehouse_id = ForeignKeyField(Product)
-    active = BooleanField()
+    product_id = ForeignKeyField(Product)
     balance = IntegerField()
-    doc_number_id = ForeignKeyField(Operation_doc_warehouse)
+    ship = BooleanField()
+    doc_operation_id = ForeignKeyField(Operation_doc_warehouse)
 
 
 class Warehouse(Table):
