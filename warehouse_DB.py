@@ -39,7 +39,11 @@ class WarehouseClass:
 
     def get_id_product(self, find_code):
         # ищет id товара из таблицы product по артиклу
-        return Product.get(Product.code_product == find_code)
+        try:
+            data = Product.get(Product.code_product == find_code)
+        except DoesNotExist:
+            data = None
+        return data
 
     def get_id_warehouse(self, warehouse_name):
         # по имени склада возращает его ID из списка складов
